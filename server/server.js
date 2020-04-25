@@ -57,6 +57,25 @@ app.get('/todos/:id', (req, res) => {
         })
     }
 })
+
+app.delete('/todos/:id', (req, res) => {
+    var id = req.params.id
+    if(!ObjectID.isValid(id)){
+        console.log('ID not valid')
+        return res.status(404).send()
+    }
+    Todo.findByIdAndRemove(id).then((todo) => {
+        if(!todo){
+            console.log('ID doesnt exist in the database')
+            return res.status(404).send()
+        }
+        console.log('Successfully deleted Todo');
+        res.send({todo})
+    }).catch((e) => {
+        console.log(e)
+        return res.status(400).send()
+    })
+})
  
 app.listen(port, () => {
     console.log(`Server started up at port ${port}`)
